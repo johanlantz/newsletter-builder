@@ -88,6 +88,12 @@ header = in_file.read()
 in_file = open('elements/h1.html', 'r')
 h1 = in_file.read()
 
+in_file = open('elements/h2.html', 'r')
+h2 = in_file.read()
+
+in_file = open('elements/h3.html', 'r')
+h3 = in_file.read()
+
 in_file = open('elements/img_big.html', 'r')
 img_big = in_file.read()
 
@@ -96,9 +102,6 @@ img_small = in_file.read()
 
 in_file = open('elements/three_columns.html', 'r')
 three_columns = in_file.read()
-
-in_file = open('elements/h3.html', 'r')
-h3 = in_file.read()
 
 in_file = open('elements/border.html', 'r')
 border = in_file.read()
@@ -138,6 +141,8 @@ while line != "":
     out_file.write(img_small)
   elif line.find("<three_columns>") != -1:
   	write_three_columns(line)
+  elif line.find("h3") != -1:
+    write_generic_tag("h3", line)
   elif line.find("h3") != -1:
     write_generic_tag("h3", line)
   elif line.find("border") != -1:
