@@ -5,8 +5,8 @@ import re
 
 def write_generic_tag(tag, line):
   try:
-  	res = re.search('<' + tag + '>(.*?)</'+ tag + '>', line)
-  	tagContent = res.group(1)
+    res = re.search('<' + tag + '>(.*?)</'+ tag + '>', line)
+    tagContent = res.group(1)
   except AttributeError:
     print "Error: tag " + tag + " not found"
     quit()
@@ -19,56 +19,72 @@ def write_three_columns(start_line):
   
   localThreeColumns = three_columns
   for i in range(0, 3):
-  	link = in_file.readline()
-  	try:
-  	  res = re.search('<link>(.*?)</link>', link)
-  	  prodLink = res.group(1)
-  	except AttributeError:
-  	  print "Error: link tag not found inside three_columns"
-  	  quit()
+    link = in_file.readline()
+    try:
+      res = re.search('<link>(.*?)</link>', link)
+      prodLink = res.group(1)
+    except AttributeError:
+      print "Error: link tag not found inside three_columns"
+      quit()
 
-  	#Get the product info
-  	response = urllib2.urlopen(prodLink)
-  	html = response.read()
+    #Get the product info
+    response = urllib2.urlopen(prodLink)
+    html = response.read()
 
-  	try:
-  	  res = re.search("<h1 itemprop=\"name\">(.*?)</h1>", html)
-  	  prodName = res.group(1)
-  	  print prodName
-  	except AttributeError:
-  	  print "Error: Product name not found"
-  	  quit()
+    try:
+      res = re.search("<h1 itemprop=\"name\">(.*?)</h1>", html)
+      prodName = res.group(1)
+      print prodName
+    except AttributeError:
+      print "Error: Product name not found"
+      quit()
 
-  	try:
-  	  res = re.search("<span itemprop=\"image\" content=\"(.*?)\"></span>", html)
-  	  prodImageLink = res.group(1)
-  	  print prodImageLink
-  	except AttributeError:
-  	  print "Error: Product image not found"
-  	  quit()
+    try:
+      res = re.search("<span itemprop=\"image\" content=\"(.*?)\"></span>", html)
+      prodImageLink = res.group(1)
+      print prodImageLink
+    except AttributeError:
+      print "Error: Product image not found"
+      quit()
 
-  	try:
-  	  res = re.search("<span id=\"our_price_display\" itemprop=\"price\">(.*?)</span>", html)
-  	  prodPrice = res.group(1)
-  	  print prodPrice
-  	except AttributeError:
-  	  print "Error: Product price not found"
-  	  quit()
+    try:
+      res = re.search("<span id=\"our_price_display\" itemprop=\"price\">(.*?)</span>", html)
+      prodPrice = res.group(1)
+      print prodPrice
+    except AttributeError:
+      print "Error: Product price not found"
+      quit()
 
-  	#Insert product info
-  	
-  	stringToReplace = "***link" + str(i + 1) + "***"
-  	localThreeColumns = localThreeColumns.replace(stringToReplace, prodLink)
+    #Check if there is an original price in case this product is discounted
+    prodOldPrice = None
+    try:
+      res = re.search("<span id=\"old_price_display\">(.*?)</span>", html)
+      if (res != None):
+        prodOldPrice = res.group(1)
+        print "Discounted product, old price=" + prodOldPrice
+    except AttributeError:
+      print "Exception searching for oldPrice"
 
-  	stringToReplace = "***image" + str(i + 1) + "***"
-  	localThreeColumns = localThreeColumns.replace(stringToReplace, prodImageLink)
+    #Insert product info
+    
+    stringToReplace = "***link" + str(i + 1) + "***"
+    localThreeColumns = localThreeColumns.replace(stringToReplace, prodLink)
 
-  	stringToReplace = "***name" + str(i + 1) + "***"
-  	localThreeColumns = localThreeColumns.replace(stringToReplace, prodName)
+    stringToReplace = "***image" + str(i + 1) + "***"
+    localThreeColumns = localThreeColumns.replace(stringToReplace, prodImageLink)
 
-  	stringToReplace = "***price" + str(i + 1) + "***"
-  	localThreeColumns = localThreeColumns.replace(stringToReplace, prodPrice)
+    stringToReplace = "***name" + str(i + 1) + "***"
+    localThreeColumns = localThreeColumns.replace(stringToReplace, prodName)
 
+    stringToReplace = "***price" + str(i + 1) + "***"
+    localThreeColumns = localThreeColumns.replace(stringToReplace, prodPrice)
+
+    if (prodOldPrice != None):
+      stringToReplace = "***oldPrice" + str(i + 1) + "***"
+      localThreeColumns = localThreeColumns.replace(stringToReplace, prodOldPrice)
+    else:
+      stringToReplace = "***oldPrice" + str(i + 1) + "***"
+      localThreeColumns = localThreeColumns.replace(stringToReplace, "")
 
   #write the modified three_columns to file
   out_file.write(localThreeColumns)
@@ -140,7 +156,7 @@ while line != "":
   elif line.find("img_small") != -1:
     out_file.write(img_small)
   elif line.find("<three_columns>") != -1:
-  	write_three_columns(line)
+    write_three_columns(line)
   elif line.find("h2") != -1:
     write_generic_tag("h2", line)
   elif line.find("h3") != -1:
@@ -150,8 +166,8 @@ while line != "":
   elif line.find("spacer") != -1:
     out_file.write(spacer)
   else:
-  	if line.find("link") != -1:
-  	  print "Unknown tag" + line
+    if line.find("link") != -1:
+      print "Unknown tag" + line
 
   line = in_file.readline()
 
