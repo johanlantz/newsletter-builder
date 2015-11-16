@@ -141,8 +141,8 @@ while line != "":
     out_file.write(img_small)
   elif line.find("<three_columns>") != -1:
   	write_three_columns(line)
-  elif line.find("h3") != -1:
-    write_generic_tag("h3", line)
+  elif line.find("h2") != -1:
+    write_generic_tag("h2", line)
   elif line.find("h3") != -1:
     write_generic_tag("h3", line)
   elif line.find("border") != -1:
