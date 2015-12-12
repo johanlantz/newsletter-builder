@@ -80,6 +80,7 @@ def write_three_columns(start_line):
     localThreeColumns = localThreeColumns.replace(stringToReplace, prodPrice)
 
     if (prodOldPrice != None):
+      
       stringToReplace = "***oldPrice" + str(i + 1) + "***"
       localThreeColumns = localThreeColumns.replace(stringToReplace, prodOldPrice)
     else:
