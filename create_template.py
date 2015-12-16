@@ -42,6 +42,7 @@ def write_three_columns(start_line):
     try:
       res = re.search("<span itemprop=\"image\" content=\"(.*?)\"></span>", html)
       prodImageLink = res.group(1)
+      prodImageLink = prodImageLink.replace("http", "https")
       print prodImageLink
     except AttributeError:
       print "Error: Product image not found"
