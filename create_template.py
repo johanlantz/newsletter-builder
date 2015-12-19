@@ -93,6 +93,32 @@ def write_three_columns(start_line):
   #skip closing three_columns
   in_file.readline()
 
+def write_image(tag, img):
+  tempImg = img
+  href = None
+  try:
+    res = re.search("href=\"(.*?)\"", line)
+    if (res != None):
+      href = res.group(1)
+      print ("image href = " + href)
+      tempImg = tempImg.replace("***href***", href)
+  except AttributeError:
+    print ("Exception searching for href")
+
+  src = None
+  try:
+    res = re.search("src=\"(.*?)\"", line)
+    if (res != None):
+      src = res.group(1)
+      print ("image src = " + src)
+      tempImg = tempImg.replace("***src***", src)
+  except AttributeError:
+    print ("Exception searching for src")
+
+  out_file.write(tempImg);
+
+
+
 #Read the html elements
 in_file = open('elements/head_and_css.html', 'r')
 head_and_css = in_file.read()
@@ -154,9 +180,9 @@ while line != "":
   if line.find("h1") != -1:
     write_generic_tag("h1", line)
   elif line.find("img_big") != -1:
-    out_file.write(img_big)
+    write_image(line, img_big)
   elif line.find("img_small") != -1:
-    out_file.write(img_small)
+    write_image(line, img_small)
   elif line.find("<three_columns>") != -1:
     write_three_columns(line)
   elif line.find("h2") != -1:
