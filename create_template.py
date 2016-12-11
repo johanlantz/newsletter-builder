@@ -138,6 +138,9 @@ h2 = in_file.read()
 in_file = open('elements/h3.html', 'r')
 h3 = in_file.read()
 
+in_file = open('elements/span.html', 'r')
+span = in_file.read()
+
 in_file = open('elements/img_big.html', 'r')
 img_big = in_file.read()
 
@@ -189,6 +192,8 @@ while line != "":
     write_generic_tag("h2", line)
   elif line.find("h3") != -1:
     write_generic_tag("h3", line)
+  elif line.find("<span>") != -1:
+  	write_generic_tag("span", line)
   elif line.find("border") != -1:
     out_file.write(border)
   elif line.find("spacer") != -1:
