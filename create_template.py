@@ -3,6 +3,7 @@ import urllib2
 import re
 
 
+
 def write_generic_tag(tag, line):
   try:
     res = re.search('<' + tag + '>(.*?)</'+ tag + '>', line)
@@ -15,7 +16,7 @@ def write_generic_tag(tag, line):
   templateContent = templateContent.replace("***tag***", tagContent)
   out_file.write(templateContent)
 
-def write_three_columns(start_line):
+def write_three_columns(show_price=True):
   
   localThreeColumns = three_columns
   for i in range(0, 3):
@@ -77,17 +78,23 @@ def write_three_columns(start_line):
     stringToReplace = "***name" + str(i + 1) + "***"
     localThreeColumns = localThreeColumns.replace(stringToReplace, prodName)
 
-    stringToReplace = "***price" + str(i + 1) + "***"
-    localThreeColumns = localThreeColumns.replace(stringToReplace, prodPrice)
+    if show_price:
+    	stringToReplace = "***price" + str(i + 1) + "***"
+    	localThreeColumns = localThreeColumns.replace(stringToReplace, prodPrice)
 
-    if (prodOldPrice != None):
+    	if (prodOldPrice != None):
       
-      stringToReplace = "***oldPrice" + str(i + 1) + "***"
-      localThreeColumns = localThreeColumns.replace(stringToReplace, prodOldPrice)
+      		stringToReplace = "***oldPrice" + str(i + 1) + "***"
+      		localThreeColumns = localThreeColumns.replace(stringToReplace, prodOldPrice)
+    	else:
+      		stringToReplace = "***oldPrice" + str(i + 1) + "***"
+      		localThreeColumns = localThreeColumns.replace(stringToReplace, "")
     else:
-      stringToReplace = "***oldPrice" + str(i + 1) + "***"
-      localThreeColumns = localThreeColumns.replace(stringToReplace, "")
-
+    	#s = StringIO.StringIO(localThreeColumns)
+		#for line in s:
+   		#o_something_with(line)
+   		print "no price"
+    	
   #write the modified three_columns to file
   out_file.write(localThreeColumns)
   #skip closing three_columns
@@ -187,7 +194,7 @@ while line != "":
   elif line.find("img_small") != -1:
     write_image(line, img_small)
   elif line.find("<three_columns>") != -1:
-    write_three_columns(line)
+    write_three_columns()
   elif line.find("h2") != -1:
     write_generic_tag("h2", line)
   elif line.find("h3") != -1:
