@@ -3,7 +3,6 @@ import urllib2
 import re
 
 
-
 def write_generic_tag(tag, line):
   try:
     res = re.search('<' + tag + '>(.*?)</'+ tag + '>', line)
@@ -16,8 +15,7 @@ def write_generic_tag(tag, line):
   templateContent = templateContent.replace("***tag***", tagContent)
   out_file.write(templateContent)
 
-def write_three_columns(show_price=True):
-  
+def write_three_columns(hidePrice=False):
   localThreeColumns = three_columns
   for i in range(0, 3):
     link = in_file.readline()
@@ -78,23 +76,24 @@ def write_three_columns(show_price=True):
     stringToReplace = "***name" + str(i + 1) + "***"
     localThreeColumns = localThreeColumns.replace(stringToReplace, prodName)
 
-    if show_price:
-    	stringToReplace = "***price" + str(i + 1) + "***"
-    	localThreeColumns = localThreeColumns.replace(stringToReplace, prodPrice)
+    
+    stringToReplace = "***price" + str(i + 1) + "***"
+    localThreeColumns = localThreeColumns.replace(stringToReplace, prodPrice)
 
-    	if (prodOldPrice != None):
-      
-      		stringToReplace = "***oldPrice" + str(i + 1) + "***"
-      		localThreeColumns = localThreeColumns.replace(stringToReplace, prodOldPrice)
-    	else:
-      		stringToReplace = "***oldPrice" + str(i + 1) + "***"
-      		localThreeColumns = localThreeColumns.replace(stringToReplace, "")
+    if (prodOldPrice != None):
+      stringToReplace = "***oldPrice" + str(i + 1) + "***"
+      localThreeColumns = localThreeColumns.replace(stringToReplace, prodOldPrice)
     else:
-    	#s = StringIO.StringIO(localThreeColumns)
-		#for line in s:
-   		#o_something_with(line)
-   		print "no price"
-    	
+      stringToReplace = "***oldPrice" + str(i + 1) + "***"
+      localThreeColumns = localThreeColumns.replace(stringToReplace, "")
+   
+
+  #if noPrice is selected, hide all the h3 tags in the final doc
+  if hidePrice == True:
+    h3s = re.findall('<h3 (.*?)</h3>', localThreeColumns)
+    for h3ToRemove in h3s:
+      localThreeColumns = localThreeColumns.replace(h3ToRemove, " style=\"display:none\">")
+
   #write the modified three_columns to file
   out_file.write(localThreeColumns)
   #skip closing three_columns
@@ -193,8 +192,8 @@ while line != "":
     write_image(line, img_big)
   elif line.find("img_small") != -1:
     write_image(line, img_small)
-  elif line.find("<three_columns>") != -1:
-    write_three_columns()
+  elif line.find("three_columns") != -1:
+    write_three_columns((line.find("hidePrice") != -1))
   elif line.find("h2") != -1:
     write_generic_tag("h2", line)
   elif line.find("h3") != -1:
