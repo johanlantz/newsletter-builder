@@ -48,7 +48,7 @@ def write_three_columns(hidePrice=False):
       quit()
 
     try:
-      res = re.search("<span id=\"our_price_display\" itemprop=\"price\">(.*?)</span>", html)
+      res = re.search("<span id=\"our_price_display\">(.*?)</span>", html)
       prodPrice = res.group(1)
       print prodPrice
     except AttributeError:
