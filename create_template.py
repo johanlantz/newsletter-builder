@@ -31,7 +31,7 @@ def write_three_columns(hidePrice=False):
     html = response.read()
 
     try:
-      res = re.search("<h1 itemprop=\"name\">(.*?)</h1>", html)
+      res = re.search("itemprop=\"name\">(.*?)</h1>", html)
       prodName = res.group(1)
       print prodName
     except AttributeError:
@@ -39,16 +39,15 @@ def write_three_columns(hidePrice=False):
       quit()
 
     try:
-      res = re.search("<span itemprop=\"image\" content=\"(.*?)\"></span>", html)
+      res = re.search("<meta itemprop=\"image\" content=\"(.*?)\">", html)
       prodImageLink = res.group(1)
-      prodImageLink = prodImageLink.replace("http", "https")
       print prodImageLink
     except AttributeError:
       print "Error: Product image not found"
       quit()
 
     try:
-      res = re.search("<span id=\"our_price_display\">(.*?)</span>", html)
+      res = re.search("<meta itemprop=\"price\" content=\"(.*?)\">", html)
       prodPrice = res.group(1)
       print prodPrice
     except AttributeError:
@@ -58,7 +57,7 @@ def write_three_columns(hidePrice=False):
     #Check if there is an original price in case this product is discounted
     prodOldPrice = None
     try:
-      res = re.search("<span id=\"old_price_display\">(.*?)</span>", html)
+      res = re.search("<span class=\"regular-price\">(.*?)</span>", html)
       if (res != None):
         prodOldPrice = res.group(1)
         print "Discounted product, old price=" + prodOldPrice
