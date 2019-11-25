@@ -8,7 +8,7 @@ def write_generic_tag(tag, line):
     res = re.search('<' + tag + '>(.*?)</'+ tag + '>', line)
     tagContent = res.group(1)
   except AttributeError:
-    print "Error: tag " + tag + " not found"
+    print( "Error: tag " + tag + " not found")
     quit()
   file = open("elements/" + tag + ".html", 'r') 
   templateContent = file.read()
@@ -23,7 +23,7 @@ def write_three_columns(hidePrice=False):
       res = re.search('<link>(.*?)</link>', link)
       prodLink = res.group(1)
     except AttributeError:
-      print "Error: link tag not found inside three_columns"
+      print("Error: link tag not found inside three_columns")
       quit()
 
     #Get the product info
@@ -33,25 +33,25 @@ def write_three_columns(hidePrice=False):
     try:
       res = re.search("itemprop=\"name\">(.*?)</h1>", html)
       prodName = res.group(1)
-      print prodName
+      print(prodName)
     except AttributeError:
-      print "Error: Product name not found"
+      print( "Error: Product name not found")
       quit()
 
     try:
       res = re.search("<meta itemprop=\"image\" content=\"(.*?)\">", html)
       prodImageLink = res.group(1)
-      print prodImageLink
+      print (prodImageLink)
     except AttributeError:
-      print "Error: Product image not found"
+      print("Error: Product image not found")
       quit()
 
     try:
       res = re.search("<meta itemprop=\"price\" content=\"(.*?)\">", html)
       prodPrice = res.group(1)
-      print prodPrice
+      print (prodPrice)
     except AttributeError:
-      print "Error: Product price not found"
+      print ("Error: Product price not found")
       quit()
 
     #Check if there is an original price in case this product is discounted
@@ -60,9 +60,9 @@ def write_three_columns(hidePrice=False):
       res = re.search("<span class=\"regular-price\">(.*?)</span>", html)
       if (res != None):
         prodOldPrice = res.group(1)
-        print "Discounted product, old price=" + prodOldPrice
+        print("Discounted product, old price=" + prodOldPrice)
     except AttributeError:
-      print "Exception searching for oldPrice"
+      print("Exception searching for oldPrice")
 
     #Insert product info
     
@@ -205,7 +205,7 @@ while line != "":
     out_file.write(spacer)
   else:
     if line.find("link") != -1:
-      print "Unknown tag" + line
+      print( "Unknown tag" + line)
 
   line = in_file.readline()
 
