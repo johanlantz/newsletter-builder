@@ -1,6 +1,7 @@
 import os
-import urllib2
+#import urllib2
 import re
+from urllib.request import urlopen
 
 
 def write_generic_tag(tag, line):
@@ -27,8 +28,8 @@ def write_three_columns(hidePrice=False):
       quit()
 
     #Get the product info
-    response = urllib2.urlopen(prodLink)
-    html = response.read()
+    response = urlopen(prodLink)
+    html = response.read().decode()
 
     try:
       res = re.search("itemprop=\"name\">(.*?)</h1>", html)
